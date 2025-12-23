@@ -1,13 +1,34 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router";
-import "./css/login.css"
+import "./css/login.css";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassWord] = useState("");
+  const [errors, setErrors] = useState({});
+
+  function validateForm() {
+    const newErrors = {};
+
+    if (!email) {
+      newErrors.email = "Az email cím kötelező";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Érvénytelen email formátum";
+    }
+
+    if (!password) {
+      newErrors.password = "A jelszó kötelező";
+    } else if (password.length < 6) {
+      newErrors.password =
+        "A jelszónak legalább 6 karakter hosszúnak kell lennie";
+    }
+
+    setErrors({ ...newErrors });
+  }
   function submit(event) {
-    event.preventDefault()
-    console.log(email,password)
+    event.preventDefault();
+    validateForm();
+    console.log(email, password);
   }
   return (
     <div className="login">
@@ -24,8 +45,9 @@ export default function LoginPage() {
             }}
             id="email"
           />
+          {errors.email && <span className="error-text">{errors.email}</span>}
         </div>
-         <div>
+        <div>
           <label htmlFor="password">PASSWORD</label>
           <input
             type="password"
@@ -36,12 +58,16 @@ export default function LoginPage() {
             }}
             id="password"
           />
+          {errors.password && (
+            <span className="error-text">{errors.password}</span>
+          )}
         </div>
         <div>
           <input type="submit" value="LOGIN" />
         </div>
         <div className="szoveg">
-          Registration is free!  <NavLink to="/register">CREATE AN ACCOUNT</NavLink>
+          Registration is free!{" "}
+          <NavLink to="/register">CREATE AN ACCOUNT</NavLink>
         </div>
       </form>
     </div>

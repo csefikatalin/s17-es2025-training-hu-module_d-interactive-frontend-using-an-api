@@ -22,3 +22,6 @@ input {
 .login a{
     color:gray;
 }
+.error-text {
+    color:red;
+}
