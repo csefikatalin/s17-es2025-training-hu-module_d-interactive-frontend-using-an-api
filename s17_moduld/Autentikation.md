@@ -212,7 +212,7 @@ function loadUser() {
 
   setToken(savedToken);
   setLoading(true);
-/* ha megvan a token, a végpontról lekérdezzk a felhasználó adatait
+  /* ha megvan a token, a végpontról lekérdezzk a felhasználó adatait
 a fejléchez mindenképp csatolni kell a tokent. Erre szolgál a getAuthHeaders függvény. */
   myAxios
     .get("/users/me", { headers: getAuthHeaders() })
@@ -229,6 +229,7 @@ a fejléchez mindenképp csatolni kell a tokent. Erre szolgál a getAuthHeaders 
     });
 }
 ```
+
 2. A value-hoz hozzá kell adni a user - t is.
 
 3. Navigation.js-ben módosítani kell a felhasználó adatait megjelenítő részt.
@@ -239,7 +240,6 @@ a fejléchez mindenképp csatolni kell a tokent. Erre szolgál a getAuthHeaders 
     {user.creditBalance ? user.creditBalance : "0"} credits
   </li>
   <li>Welcome {user.name ? user.name : "Guest"}</li>
-
 </ul>
 ```
 
@@ -274,3 +274,65 @@ function logout() {
   </li>
 </ul>
 ```
+
+## Hibakezelés
+
+Az API különböző hibákat adhat vissza működés során. A frontendnek kezelnie kell ezeket a hibákat és érthető módon meg kell jelenítenie őket a felhasználónak. A következő hibákat kell kezelni:
+
+- 400 Bad Request – A kérés hibás volt. A felhasználót értesíteni kell, hogy érvénytelen adatokat adott meg.
+- 401 Unauthorized – A hitelesítési token érvénytelen vagy lejárt. A felhasználót át kell irányítani a bejelentkezési oldalra.
+- 403 Forbidden – A felhasználónak nincs jogosultsága a kért művelethez. A felhasználót értesíteni kell a hiányzó jogosultságokról.
+- 404 Not Found – A kért erőforrás nem található. A felhasználót értesíteni kell, hogy a tartalom nem elérhető.
+- 422 Unprocessable Entity – Validációs hibák történtek. Meg kell jeleníteni a specifikus mező hibát, hogy a felhaszunáló javítani tudja.
+- 500 Internal Server Error – Szerver hiba történt. A felhasználót értesíteni kell egy ideiglenes rendszerhibáról.
+
+A **serverError** state-ben fogjuk tárolni a hibaüzeneteket.
+
+1. Hibakezeles foggvény az AuthContext-ben
+
+```javascript
+function hibakezeles(error) {
+  if (error.status === 400) {
+    setServerError("A megadott adatok nem szerepelnek az adatbázisban");
+    throw new Error("A megadott adatok nem szerepelnek az adatbázisban");
+  }
+  if (error.status === 401) {
+    setServerError(
+      "A hitelesítési token érvénytelen vagy lejárt. Menj a login oldalra!"
+    );
+    throw new Error(
+      "A hitelesítési token érvénytelen vagy lejárt. Menj a login oldalra!"
+    );
+    window.location.href = "/login";
+  }
+  if (error.status === 403) {
+    setServerError("Nincs jogosultsága kért művelethez!");
+    throw new Error("Nincs jogosultsága kért művelethez!");
+  }
+  if (error.status === 404) {
+    setServerError("A kért erőforrás nem található!");
+    throw new Error("A kért erőforrás nem található!");
+  }
+
+  if (error.status === 422) {
+    setServerError("Validációs hiba");
+    throw new Error(error.message || "Validációs hiba");
+  }
+  if (error.status === 500) {
+    setServerError("Szerver hiba történt.");
+    throw new Error(error.message || "Szerver hiba történt.");
+  }
+}
+```
+
+2. Ezt a függvényt aza API hívások catch ágában hívhatjuk!
+
+3. pl a login oldalon felhasználhatjuk a serverError értékét a hiba jelzésére.
+
+```javascript
+{
+    serverError && <div className="alert-error">{serverError}</div>;
+}
+```
+
+

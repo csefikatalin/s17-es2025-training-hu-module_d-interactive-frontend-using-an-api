@@ -15,7 +15,7 @@ export default function Navigation() {
       <nav>
         <ul>
           <li className="kiemelt">
-            <NavLink to="/">Skillshare Academy</NavLink>
+            <strong>Skillshare Academy</strong>
           </li>
         </ul>
         <ul>

@@ -4,7 +4,7 @@ import "./css/login.css";
 import { AuthContext } from "../contexts/AuthContext";
 
 export default function LoginPage() {
-  const { login } = useContext(AuthContext);
+  const { login, serverError } = useContext(AuthContext);
 
   const [email, setEmail] = useState("a@a.hu");
   const [password, setPassWord] = useState("123456");
@@ -37,14 +37,15 @@ export default function LoginPage() {
       return;
     }
     const data = { email, password };
-    console.log("Elküldöm a kérést:", data);
-    login(data)
-      
+    login(data);
   }
 
   return (
     <div className="login">
       <h1>WELCOME BACK</h1>
+
+      {serverError&&<div className="alert-error">{serverError}</div>}
+
       <form onSubmit={submit}>
         <div>
           <label htmlFor="email">EMAIL ADDRESS</label>
@@ -63,7 +64,6 @@ export default function LoginPage() {
           <label htmlFor="password">PASSWORD</label>
           <input
             type="password"
-            
             value={password}
             placeholder="Enter your password"
             onChange={(e) => {
