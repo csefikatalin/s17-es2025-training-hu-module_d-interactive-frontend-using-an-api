@@ -7,19 +7,24 @@
 3. axios
 4. react-router
 
-## Mappastruktúra
+## Mappa és fájlstruktúra
 
-pages
-contexts
-components
-Layout.js
-Navigation.js
-LoginPage.js
-RegistrationPage.js
-DashboardPage.js
-CoursesPage.js
-CourseDetailsPage.js
-MentorsPage.js
+src/
+├── pages/
+│   ├── Layout.js
+│   ├── Navigation.js
+│   │
+│   ├── LoginPage.js
+│   ├── RegistrationPage.js
+│   ├── DashboardPage.js
+│   ├── CoursesPage.js
+│   ├── CourseDetailsPage.js
+│   └── MentorsPage.js
+│
+├── components/
+│
+└── contexts/
+
 
 ## Layout és a navigáció kialakítása
 
@@ -150,6 +155,10 @@ A Login és a Regisztrációs űrlapoknál adjunk hibaüzenetet, ha nem megfelel
   }
   ```
 A validateForm függvényt meghívhatjuk a submit event-re, de meghívhatjuk az input elemek onChange eseményében is. 
+
+# Autentikáció és bejelentkezés
+
+<a href="Autentikation.md">Autentikáció megvalósítása context segítségével</a>
 
 
 

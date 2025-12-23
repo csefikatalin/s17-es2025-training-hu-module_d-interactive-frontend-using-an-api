@@ -9,6 +9,8 @@ import MentorsPage from "./pages/MentorsPage";
 import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import CourseDetailsPage from "./pages/CourseDetailsPage";
+import authMiddleware from "./middleware/authMiddleware";
+import { AuthProvider } from "./contexts/AuthContext";
 function App() {
   const router = createBrowserRouter([
     {
@@ -22,6 +24,8 @@ function App() {
     {
       path: "/",
       element: <Layout />,
+      /* ezek védett végpontok lesznek, csak azoknak a felahsználóknak látszódnak, akik be vannak jelentkezve! */
+      middleware: [authMiddleware],
       children: [
         {
           index: true,
@@ -55,7 +59,11 @@ function App() {
       element: <NoPage />,
     },
   ]);
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />;
+    </AuthProvider>
+  );
 }
 
 export default App;

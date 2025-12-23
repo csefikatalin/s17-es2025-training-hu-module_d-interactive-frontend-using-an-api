@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router";
 import "./css/navigation.css"
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function Navigation() {
+  const {logout, user}=useContext(AuthContext)
+  console.log(user)
+  console.log("navigáció")
+ /*  if (loading || !user) {
+    return <nav>Betöltés folyamatban...</nav>;
+  } */
   return (
     <header>
       <nav>
@@ -23,9 +30,9 @@ export default function Navigation() {
           </li>
         </ul>
         <ul>
-          <li className="kiemelt">25 credits</li>
-          <li>Welcome John Doe</li>
-          <li className="kiemelt">Logout</li>
+          <li className="kiemelt"> {user.creditBalance? user.creditBalance : "0"} credits</li>
+          <li>Welcome {user.name? user.name :"Guest"}</li>
+          <li className="kiemelt" onClick={logout}>Logout</li>
         </ul>
       </nav>
     </header>

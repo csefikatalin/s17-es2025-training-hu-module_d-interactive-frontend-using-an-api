@@ -1,13 +1,16 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router";
+import React, { useContext, useState} from "react";
+import { NavLink, useNavigate } from "react-router";
 import "./css/login.css";
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function RegistrationPage() {
+  const { register } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassWord] = useState("");
   const [cpassword, setCPassWord] = useState("");
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   function validateForm() {
     const newErrors = {};
@@ -39,6 +42,14 @@ export default function RegistrationPage() {
   function submit(event) {
     event.preventDefault();
     validateForm();
+    const data = {
+      name: name,
+      email: email,
+      password: password,
+      confirmpassword: cpassword,
+    };
+    register(data);
+    navigate("/login");
     console.log(name, email, password, cpassword);
   }
   return (
@@ -53,7 +64,6 @@ export default function RegistrationPage() {
             placeholder="Enter your full name"
             onChange={(e) => {
               setName(e.target.value);
-            
             }}
             id="name"
           />
@@ -67,7 +77,6 @@ export default function RegistrationPage() {
             placeholder="Enter your email"
             onChange={(e) => {
               setEmail(e.target.value);
-           
             }}
             id="email"
           />
@@ -81,7 +90,6 @@ export default function RegistrationPage() {
             placeholder="Enter your password"
             onChange={(e) => {
               setPassWord(e.target.value);
-          
             }}
             id="password"
           />
@@ -97,7 +105,6 @@ export default function RegistrationPage() {
             placeholder="Confirm your password"
             onChange={(e) => {
               setCPassWord(e.target.value);
-           
             }}
             id="cpassword"
           />

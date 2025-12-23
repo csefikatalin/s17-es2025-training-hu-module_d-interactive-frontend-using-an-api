@@ -7,8 +7,7 @@ export default function Layout() {
     <div>
       <Navigation />
       <main>
-
-      <Outlet />
+        <Outlet />
       </main>
     </div>
   );
