@@ -32,7 +32,9 @@ main {
   text-align: center;
 }
 .alahuzas {
-  border-bottom:1ps dotted gray;
+  border-bottom:1px dotted gray;
+  padding-bottom:5px;
+  margin-bottom:20px;
 }
 .szelesseg {
   width:100px;
@@ -41,4 +43,20 @@ main {
 
 .courseone *{
   margin:10px;
+}
+.dobozok{
+  text-align: center;
+  display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+  gap:10px;
+  margin-bottom:10px;
+}
+.dobozok>div{
+  padding:10px;
+}
+.diagram{
+  text-align: center;
+  display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(400px,1fr)) ;
+  gap:10px
 }

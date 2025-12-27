@@ -24,7 +24,19 @@ A szerver nem tárol sessiont, ezért ez REST-kompatibilis, **stateless** .
 - a localStorage sebezhető
 - lejárati időt jól kell beállítani
 
-## Middleware használata a menüpontok eléréséhez
+## Védett route implementálása middleware-rel
+
+A React Router v7 **middleware** funkciója lehetővé teszi, hogy központosított logikát futtassunk le route-ok előtt. Ez ideális hitelesítés kezelésére.
+
+**Mi az a middleware?**
+
+A middleware egy függvény, amely:
+
+- A route komponens renderelése **előtt** fut le
+- Ellenőrizheti a hitelesítést
+- Átirányíthat más route-ra (pl. login oldalra)
+- Több route-ra is alkalmazható
+
 
 Jelen pillanatban minden menüpont elérhető bármelyik felhasználnak. De a menüpontokat védhetjük is, úgy, hogy bizonyos menüpontokat csak bizonyos felhasználók láthassanak. Ehhez létre kell hoznunk egy middleware fájlt.
 
@@ -52,8 +64,6 @@ async function authMiddleware({ request }) {
 }
 
 export default authMiddleware;
-
-export default authMiddleware;
 ```
 
 Azután az Api.js-ben be kell állítanuk a védett menüpontokra a védelmet.
@@ -71,6 +81,30 @@ Azután az Api.js-ben be kell állítanuk a védett menüpontokra a védelmet.
           element: <Navigate to="/dashboard" replace />,
         },
         ...
+```
+
+**Middleware előnyei:**
+
+✅ **Központosított logika:** Egy helyen van a hitelesítési ellenőrzés
+✅ **Tisztább kód:** Nincs szükség wrapper komponensekre
+✅ **Futási sorrend:** Lefut a komponens renderelése előtt
+✅ **Újrafelhasználható:** Több route-ra is alkalmazható
+✅ **Láncolható:** Több middleware is használható egyszerre
+
+**Middleware működése:**
+
+```
+1. Felhasználó megpróbál elérni /dashboard-ot
+   ↓
+2. authMiddleware lefut
+   ↓
+3. Ellenőrzi a localStorage-ban a token-t
+   ↓
+4. Ha nincs token → throw redirect("/login")
+   ↓
+5. Ha van token → a navigáció folytatódik
+   ↓
+6. DashboardPage komponens renderelődik
 ```
 
 ## A regisztráció és a bejelentkezés megvalósítása
@@ -245,7 +279,7 @@ a fejléchez mindenképp csatolni kell a tokent. Erre szolgál a getAuthHeaders 
 
 ### A logout megvalósítása
 
-1. Az AuthContextben létrehozom a fggvényt
+1. Az AuthContextben létrehozom a függvényt
 
 ```javascript
 function logout() {
