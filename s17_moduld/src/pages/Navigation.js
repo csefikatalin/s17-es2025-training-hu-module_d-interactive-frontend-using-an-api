@@ -4,11 +4,11 @@ import "./css/navigation.css"
 import { AuthContext } from "../contexts/AuthContext";
 
 export default function Navigation() {
-  const {logout, user}=useContext(AuthContext)
+  const {logout, user, loading}=useContext(AuthContext)
 
- /*  if (loading || !user) {
+  if (loading || !user) {
     return <nav>Betöltés folyamatban...</nav>;
-  } */
+  } 
   return (
     <header>
       <nav>
@@ -29,8 +29,8 @@ export default function Navigation() {
           </li>
         </ul>
         <ul>
-          <li className="kiemelt"> {user.creditBalance? user.creditBalance : "0"} credits</li>
-          <li>Welcome {user.name? user.name :"Guest"}</li>
+          <li className="kiemelt"> {user.user.creditBalance? user.user.creditBalance : "00"} credits</li>
+          <li>Welcome {user.user.name? user.user.name :"Guest"}</li>
           <li className="kiemelt" onClick={logout}>Logout</li>
         </ul>
       </nav>

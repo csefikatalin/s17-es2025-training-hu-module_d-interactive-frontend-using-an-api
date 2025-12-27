@@ -9,10 +9,10 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import { Chart, ArcElement } from 'chart.js';
-import { Doughnut } from 'react-chartjs-2';
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import { Chart, ArcElement } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
 
 /* vonaldiagramhoz  */
 ChartJS.register(
@@ -25,88 +25,116 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: 'Chart.js Line Chart',
-    },
-  },
-};
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-export const data = {
-  labels,
-  datasets: [
-    
-    {
-      label: 'Dataset 1',
-      data: labels.map((l,i) => i),
-      borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
-    },
-  ],
-};
-
-/* kördiagramhoz */
-ChartJS.register(ArcElement, Tooltip, Legend);
-export const data2 = {
-  labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-  datasets: [
-    {
-      label: '# of Votes',
-      data: [12, 19, 3, 5, 2, 3],
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(255, 159, 64, 0.2)',
-      ],
-      borderColor: [
-        'rgba(255, 99, 132, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)',
-      ],
-      borderWidth: 1,
-    },
-  ],
-};
-
 export default function DashboardPage() {
   const { user } = useContext(AuthContext);
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Kredit gyűjtés az elmúlt 30 napban",
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: "Kreditek",
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: "Dátum",
+        },
+      },
+    },
+  };
+  const labels = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+  ];
+  const data = {
+    labels, //X tengely
+    datasets: [
+      {
+        label: "Dataset 1",
+        data: labels.map((l, i) => i), //Y tengely
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
+      },
+    ],
+  };
 
+  /* kördiagramhoz */
+  ChartJS.register(ArcElement, Tooltip, Legend);
+  const data2 = {
+    labels: ["Completed chapters", "Enrolled Courses"],
+    datasets: [
+      {
+        label: "# of Votes",
+       /*  data: [user.stats.completedChapters, user.stats.enrolledCourses], */
+        data: [12, 5],
+        backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)"],
+        borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
+        borderWidth: 2,
+      },
+    ],
+  };
+   const options2 = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+      },
+      title: {
+        display: true,
+        text: "Statisztikák",
+      },
+    },
+  };
 
   return (
     <div className=" ">
       <div className="keret nagy padding">
-        <h1>Welcome back, {user.name ? user.name : "Guest"}!</h1>
-        <h2 className="alahuzas">Current balance 25 credits</h2>
-       
+        <h1>Welcome back, {user.user.name ? user.user.name : "Guest"}!</h1>
+        <h2 className="alahuzas">
+          Current balance <strong>{user.user.creditBalance||0}</strong> credits
+        </h2>
+
         <div className="dobozok">
           <div className="keret">
-            <h3>3</h3>
+            <h3>{user.stats.enrolledCourses||0}</h3>
             <p>enrolled courses</p>
           </div>
           <div className="keret">
-            <h3>8</h3>
+            <h3>{user.stats.completedChapters}</h3>
             <p>Completed chapters</p>
           </div>
           <div className="keret">
-            <h3>25</h3>
+            <h3>{user.stats.totalCreditsEarned}</h3>
             <p>Total credits earned</p>
           </div>
         </div>
         <div className="diagram">
-          <div className="line keret"><Line options={options} data={data} /></div>
-          <div className="pie keret"> <Doughnut data={data2} /></div>
+          <div className="line keret">
+            <Line options={options} data={data} />
+          </div>
+          <div className="pie keret">
+            {" "}
+            <Doughnut options={options2} data={data2} />
+          </div>
         </div>
       </div>
     </div>

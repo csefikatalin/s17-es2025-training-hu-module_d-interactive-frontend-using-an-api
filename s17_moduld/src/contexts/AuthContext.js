@@ -9,8 +9,9 @@ export function AuthProvider({ children }) {
   /* Ha van már elmentett token, akor azt behozza a localstorage-ból */
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState([]);
+
   const [loading, setLoading] = useState(true);
-  const [serverError, setServerError]=useState("")
+  const [serverError, setServerError] = useState("");
 
   /* beolvassuk a localstorage-ból a tokent és beállítjuk a felahsználót
    */
@@ -19,7 +20,7 @@ export function AuthProvider({ children }) {
   }, []);
   function loadUser() {
     const savedToken = localStorage.getItem("token");
-
+    setLoading(true);
     if (!savedToken) {
       setLoading(false); // nincs token, loading vége
       setUser(null);
@@ -32,45 +33,49 @@ export function AuthProvider({ children }) {
     myAxios
       .get("/users/me", { headers: getAuthHeaders() })
       .then((response) => {
-        setUser(response.data.user); //  beállítjuk a user-t
+        setUser(response.data); //  beállítjuk a user-t
       })
       .catch((error) => {
         console.log(error);
         setUser(null); // ha hiba, töröljük a user-t
         //localStorage.removeItem("token"); // ha invalid token
-        hibakezeles(error)
+        hibakezeles(error);
       })
       .finally(() => {
         setLoading(false); //  loading vége, user betöltve
       });
   }
-  function hibakezeles(error){
-     if (error.status === 400) {
-        setServerError("A megadott adatok nem szerepelnek az adatbázisban")
-          throw new Error("A megadott adatok nem szerepelnek az adatbázisban");
-        }
-        if (error.status === 401) {
-             setServerError("A hitelesítési token érvénytelen vagy lejárt. Menj a login oldalra!")
-          throw new Error("A hitelesítési token érvénytelen vagy lejárt. Menj a login oldalra!");
-           window.location.href = "/login";
-        }
-         if (error.status === 403) {
-            setServerError("Nincs jogosultsága kért művelethez!")
-          throw new Error("Nincs jogosultsága kért művelethez!");
-        }
-         if (error.status === 404) {
-            setServerError("A kért erőforrás nem található!")
-            throw new Error("A kért erőforrás nem található!");
-        }
-        
-        if (error.status === 422) {
-            setServerError("Validációs hiba")
-            throw new Error(error.message || "Validációs hiba");
-        }
-        if (error.status === 500) {
-            setServerError("Szerver hiba történt.")
-          throw new Error(error.message || "Szerver hiba történt.");
-        }
+  function hibakezeles(error) {
+    if (error.status === 400) {
+      setServerError("A megadott adatok nem szerepelnek az adatbázisban");
+      throw new Error("A megadott adatok nem szerepelnek az adatbázisban");
+    }
+    if (error.status === 401) {
+      setServerError(
+        "A hitelesítési token érvénytelen vagy lejárt. Menj a login oldalra!"
+      );
+      throw new Error(
+        "A hitelesítési token érvénytelen vagy lejárt. Menj a login oldalra!"
+      );
+      window.location.href = "/login";
+    }
+    if (error.status === 403) {
+      setServerError("Nincs jogosultsága kért művelethez!");
+      throw new Error("Nincs jogosultsága kért művelethez!");
+    }
+    if (error.status === 404) {
+      setServerError("A kért erőforrás nem található!");
+      throw new Error("A kért erőforrás nem található!");
+    }
+
+    if (error.status === 422) {
+      setServerError("Validációs hiba");
+      throw new Error(error.message || "Validációs hiba");
+    }
+    if (error.status === 500) {
+      setServerError("Szerver hiba történt.");
+      throw new Error(error.message || "Szerver hiba történt.");
+    }
   }
 
   function login(adat) {
@@ -91,7 +96,7 @@ export function AuthProvider({ children }) {
       .catch(function (error) {
         // handle error
         console.log(error.status);
-       hibakezeles(error)
+        hibakezeles(error);
       })
       .finally(function () {
         // always executed
@@ -115,7 +120,7 @@ export function AuthProvider({ children }) {
       .catch(function (error) {
         // handle error
         console.log(error);
-        hibakezeles(error)
+        hibakezeles(error);
       })
       .finally(function () {
         setLoading(false);
@@ -131,7 +136,16 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ login, logout, register, loadUser, loading, token, user,serverError }}
+      value={{
+        login,
+        logout,
+        register,
+        loadUser,
+        loading,
+        token,
+        user,
+        serverError,
+      }}
     >
       {children}
     </AuthContext.Provider>

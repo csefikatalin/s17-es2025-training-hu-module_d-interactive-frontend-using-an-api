@@ -8,9 +8,10 @@ export default function CourseDetailsPage() {
   const navigate=useNavigate()
   const course = state?.course;
   console.log(course);
+  console.log(selectedCourse);
   useEffect(() => {
     getCourseById(course.id);
-  }, []);
+  }, [course]);
   if (loading) {
     return <div>Az oldal betöltés alatt</div>;
   }
@@ -31,13 +32,13 @@ export default function CourseDetailsPage() {
               Chapter {i + 1}: {ch.title}
             </h2>
             <p>{ch.description}</p>
-            <div className="keret nagy szelesseg">{ch.credits} credits</div>
+            <div className="keret nagy szelesseg padding">{ch.credits} credits</div>
             <button className="keret" style={{ background: "ligthGray" }}>
               {" "}
               View chapter
             </button>
             <button className="keret" style={{ background: "lightGreen" }}>
-              {ch.isCompleted ? "Chapter completed" : "Mark as Comleted"}
+              {ch.isCompleted ? "Chapter completed" : "Mark as Completed"}
             </button>
           </div>
         );

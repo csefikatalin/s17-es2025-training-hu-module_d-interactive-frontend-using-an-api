@@ -22,3 +22,5 @@ npm install chart.js react-chartjs-2
 4. A vízszintes tengely/cimkék feliratainak megadása (labels)
 5. Adatok megadása
 6. Diagramkomponens elhelyezése a megfelelő helyre. 
+
+
