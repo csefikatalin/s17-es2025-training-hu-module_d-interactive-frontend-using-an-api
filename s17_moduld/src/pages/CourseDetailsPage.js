@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router";
 export default function CourseDetailsPage() {
   const { selectedCourse, getCourseById, loading } = useContext(CoursesContext);
   const { state } = useLocation();
+  const navigate=useNavigate()
   const course = state?.course;
   console.log(course);
   useEffect(() => {
@@ -15,19 +16,29 @@ export default function CourseDetailsPage() {
   }
 
   return (
-    <div className="keret padding">
-      <h1>{selectedCourse.course.title}</h1>
-      <p>{selectedCourse.course.description}</p>
-      <p>{selectedCourse.course.difficulty}</p>
-      {selectedCourse.course.id}
-      {selectedCourse.course.chapters.map((ch) => {
+    <div className=" padding courseone">
+      <div className="keret">
+        <button className="keret padding" onClick={() => navigate(-1)}>Back to course</button>
+        <h1>{selectedCourse.course.title}</h1>
+        <p>{selectedCourse.course.description}</p>
+        <p>{selectedCourse.course.difficulty}</p>
+        {selectedCourse.course.id}
+      </div>
+      {selectedCourse.course.chapters.map((ch, i) => {
         return (
           <div className="keret">
-            <h2 className="nagy">{ch.title}</h2>
+            <h2 className="nagy alahuzas">
+              Chapter {i + 1}: {ch.title}
+            </h2>
             <p>{ch.description}</p>
-            <div className="keret nagy">{ch.credits } credits</div>
-            <button className="keret" style={{background:"ligthGray"}}> View chapter</button>
-            <button className="keret" style={{background:"lightGreen"}} >{ch.isCompleted?"Chapter completed":"Mark aa Comleted"}</button>
+            <div className="keret nagy szelesseg">{ch.credits} credits</div>
+            <button className="keret" style={{ background: "ligthGray" }}>
+              {" "}
+              View chapter
+            </button>
+            <button className="keret" style={{ background: "lightGreen" }}>
+              {ch.isCompleted ? "Chapter completed" : "Mark as Comleted"}
+            </button>
           </div>
         );
       })}

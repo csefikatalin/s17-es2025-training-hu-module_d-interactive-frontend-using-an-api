@@ -31,3 +31,14 @@ main {
 .kozep {
   text-align: center;
 }
+.alahuzas {
+  border-bottom:1ps dotted gray;
+}
+.szelesseg {
+  width:100px;
+
+}
+
+.courseone *{
+  margin:10px;
+}
