@@ -64,9 +64,38 @@ export function CoursesProvider({ children }) {
     setFilteredList(szurtLista);
   }
 
+function enrollCourse(courseId){
+ setLoading(true)
+    myAxios.post(
+      `/courses/${courseId}/enroll`, { isEnrolled: true },
+      {
+        headers: getAuthHeaders(),
+      }
+    )
+    .then((response)=>{
+      console.log(response)
+    })
+    .catch((error)=>{console.log(error)})
+    .finally(()=>{setLoading(false)});
+}
+
+  function completeChapter(courseId, chapterId) {
+    setLoading(true)
+    return myAxios.post(
+      `/courses/${courseId}/chapters/${chapterId}/complete`, { completed: true },
+      {
+        headers: getAuthHeaders(),
+      }
+    )
+    .then((response)=>{
+      console.log(response)
+    })
+    .catch((error)=>{console.log(error)})
+    .finally(()=>{setLoading(false)});
+  }
   return (
     <CoursesContext.Provider
-      value={{ getCourses, filteredList, loading, szuro, selectedCourse,getCourseById }}
+      value={{ getCourses, filteredList, loading, szuro,completeChapter, enrollCourse, selectedCourse,getCourseById }}
     >
       {children}
     </CoursesContext.Provider>

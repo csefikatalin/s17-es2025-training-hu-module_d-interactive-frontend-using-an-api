@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router";
+import { CoursesContext } from "../contexts/CoursesContext";
 
 export default function Course({
   course = { title: "teszt", description: "leírás" },
 }) {
-    const navigate=useNavigate()
+  const navigate = useNavigate();
+  const { enrollCourse } = useContext(CoursesContext);
+  function enroll() {
+    enrollCourse(course.id);
+    navigate(`/courses/${course.id}`, { state: { course } });
+  }
   return (
     <div className="course keret ">
       <h2 className="nagy">{course.title}</h2>
@@ -20,7 +26,14 @@ export default function Course({
           {course.totalCredits}
         </div>
       </div>
-      <button className="nagy" onClick={()=>{ navigate(`/courses/${course.id}`, { state: { course } });}}>{course.isEnrolled?"continue learning":"enroll"}</button>
+      <button
+        className="nagy"
+        onClick={() => {
+          enroll();
+        }}
+      >
+        {course.isEnrolled ? "continue learning" : "enroll"}
+      </button>
     </div>
   );
 }

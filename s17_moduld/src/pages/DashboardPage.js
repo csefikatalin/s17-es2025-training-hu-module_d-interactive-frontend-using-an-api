@@ -33,10 +33,11 @@ export default function DashboardPage() {
     plugins: {
       legend: {
         position: "top",
+        display:false,
       },
       title: {
         display: true,
-        text: "Kredit gyűjtés az elmúlt 30 napban",
+        text: "Credit progress (Last 30 days)",
       },
     },
     scales: {
@@ -44,13 +45,13 @@ export default function DashboardPage() {
         beginAtZero: true,
         title: {
           display: true,
-          text: "Kreditek",
+          text: "Credits",
         },
       },
       x: {
         title: {
-          display: true,
-          text: "Dátum",
+          display: false,
+          text: "Date",
         },
       },
     },
@@ -83,8 +84,8 @@ export default function DashboardPage() {
     datasets: [
       {
         label: "# of Votes",
-       /*  data: [user.stats.completedChapters, user.stats.enrolledCourses], */
-        data: [12, 5],
+        data: [user.stats.completedChapters, user.stats.enrolledCourses], 
+        /* data: [12, 5] */
         backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)"],
         borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
         borderWidth: 2,
