@@ -5,8 +5,7 @@ import { AuthContext } from "../contexts/AuthContext";
 
 export default function Navigation() {
   const {logout, user}=useContext(AuthContext)
-  console.log(user)
-  console.log("navigáció")
+
  /*  if (loading || !user) {
     return <nav>Betöltés folyamatban...</nav>;
   } */

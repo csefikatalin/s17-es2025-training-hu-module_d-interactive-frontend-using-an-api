@@ -1,7 +1,33 @@
+*{box-sizing: border-box;}
 main {
-    max-width: 1200px;
-    margin: 30px auto;
-    
-       border: 2px solid rgb(72, 70, 70);
+  max-width: 1200px;
+  margin: 30px auto;
+}
 
+.keret {
+  border: 2px solid rgb(72, 70, 70);
+}
+.course {
+  padding: 10px;
+  display:grid;
+  grid-template-rows: 100px auto 80px 50px;
+  gap:5px;
+}
+.padding {
+  padding: 10px;
+}
+.courses {
+  margin-top: 10px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 10px;
+  
+}
+
+.nagy {
+  font-variant: small-caps;
+}
+.kozep {
+  text-align: center;
 }
