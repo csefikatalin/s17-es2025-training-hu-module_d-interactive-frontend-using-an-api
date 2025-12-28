@@ -58,5 +58,6 @@ main {
   text-align: center;
   display:grid;
   grid-template-columns: repeat(auto-fit,minmax(400px,1fr)) ;
-  gap:10px
+  gap:10px;
+    height: clamp(250px, 40vh, 400px);
 }

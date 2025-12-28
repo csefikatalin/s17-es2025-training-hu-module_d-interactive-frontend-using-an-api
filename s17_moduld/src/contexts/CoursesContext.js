@@ -39,24 +39,15 @@ export function CoursesProvider({ children }) {
       .finally(() => setLoading(false));
   }
   
-  /*   function szuro(difficulties,search) {
-    console.log( difficulties);
-    setFilteredList([...coursesList])
-    if (difficulties !== "all" || search !== "") {
-      const szurtLista = coursesList.filter((c) => {
-        return c.difficulty === difficulties && c.description.toLowerCase().indexOf(search.toLowerCase())>=0 ;
-      });
-      console.log(szurtLista);
-      setFilteredList([...szurtLista])
-    }
-  } */
+
   function szuro(difficulty, search) {
     const szurtLista = coursesList.filter((c) => {
       const difficultyOk = difficulty === "all" || c.difficulty === difficulty;
 
       const searchOk =
         search === "" ||
-        c.description.toLowerCase().includes(search.toLowerCase());
+        c.description.toLowerCase().includes(search.toLowerCase())||
+        c.title.toLowerCase().includes(search.toLowerCase());
 
       return difficultyOk && searchOk;
     });

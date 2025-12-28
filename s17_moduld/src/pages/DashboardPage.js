@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import {
   Chart as ChartJS,
@@ -26,14 +26,22 @@ ChartJS.register(
 );
 
 export default function DashboardPage() {
-  const { user } = useContext(AuthContext);
+  const { user, loadUser } = useContext(AuthContext);
+  useEffect(() => {
+    loadUser();
+  }, []);
+
+  if (!user || !user.user || !user.stats) {
+    return <div>Loading dashboard...</div>;
+  }
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",
-        display:false,
+        display: false,
       },
       title: {
         display: true,
@@ -56,21 +64,37 @@ export default function DashboardPage() {
       },
     },
   };
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ];
+  const labels = [];
+  for (let index = 0; index < 30; index++) {
+    const d = new Date();
+    d.setDate(d.getDate() - (29 - index));
+    labels.push(d.toISOString().split("T")[0]);
+  }
+
+  /* Előállítjuk a recentActivity listából naponta a crediteket 
+  Egy asszociatív tömbben tároljuk - map */
+  const creditsByDate = {};
+
+  // végigmegyünk az aktivitásokon
+  if (user.recentActivity !== undefined) {
+    user.recentActivity.forEach((item) => {
+      const date = item.timestamp.split("T")[0]; // YYYY-MM-DD
+      if (!creditsByDate[date]) {
+        creditsByDate[date] = 0;
+      }
+      creditsByDate[date] += item.creditsEarned;
+    });
+  }
+
+  // Az utolsó 30 nap dátumát kikeressük az asszociatív tömbből és megnézzük a hozzá tartozó értékeket
+  const dataValues = labels.map((date) => creditsByDate[date] || 0);
+
   const data = {
-    labels, //X tengely
+    labels, // X tengely – utolsó 30 nap
     datasets: [
       {
-        label: "Dataset 1",
-        data: labels.map((l, i) => i), //Y tengely
+        labels: "Credits",
+        data: dataValues, // Y tengely
         borderColor: "rgb(53, 162, 235)",
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
@@ -84,7 +108,7 @@ export default function DashboardPage() {
     datasets: [
       {
         label: "# of Votes",
-        data: [user.stats.completedChapters, user.stats.enrolledCourses], 
+        data: [user.stats.completedChapters, user.stats.enrolledCourses],
         /* data: [12, 5] */
         backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)"],
         borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
@@ -92,7 +116,7 @@ export default function DashboardPage() {
       },
     ],
   };
-   const options2 = {
+  const options2 = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -111,12 +135,13 @@ export default function DashboardPage() {
       <div className="keret nagy padding">
         <h1>Welcome back, {user.user.name ? user.user.name : "Guest"}!</h1>
         <h2 className="alahuzas">
-          Current balance <strong>{user.user.creditBalance||0}</strong> credits
+          Current balance <strong>{user.user.creditBalance || 0}</strong>{" "}
+          credits
         </h2>
 
         <div className="dobozok">
           <div className="keret">
-            <h3>{user.stats.enrolledCourses||0}</h3>
+            <h3>{user.stats.enrolledCourses || 0}</h3>
             <p>enrolled courses</p>
           </div>
           <div className="keret">
@@ -129,10 +154,10 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="diagram">
-          <div className="line keret">
+          <div className="line keret" >
             <Line options={options} data={data} />
           </div>
-          <div className="pie keret">
+          <div className="pie keret" >
             {" "}
             <Doughnut options={options2} data={data2} />
           </div>
