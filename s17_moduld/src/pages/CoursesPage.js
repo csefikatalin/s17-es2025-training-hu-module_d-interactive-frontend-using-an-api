@@ -11,9 +11,14 @@ export default function CoursesPage() {
   }, []);
   if (loading) {
     // Betöltés alatt ezt jeleníti meg
-    return  <>  <CourseSearch /> <div>Betöltés folyamatban...</div></>;
+    return (
+      <>
+        {" "}
+        <CourseSearch /> <div>Betöltés folyamatban...</div>
+      </>
+    );
   }
- /*  if (!filteredList || filteredList.length === 0) {
+  /*  if (!filteredList || filteredList.length === 0) {
     // Ha nincs adat
   
      return  <>  <CourseSearch /> <div>Nincsenek kérdések.</div></>;
@@ -22,9 +27,9 @@ export default function CoursesPage() {
     <>
       <CourseSearch />
       <div className="courses ">
-        {   filteredList.map((course) => {
+        {filteredList.map((course) => {
           return <Course course={course} key={course.id} />;
-        }) }
+        })}
       </div>
     </>
   );

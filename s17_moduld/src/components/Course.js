@@ -15,13 +15,13 @@ export default function Course({
     <div className="course keret ">
       <h2 className="nagy">{course.title}</h2>
       <p>{course.description}</p>
-      <div className="adatok row p-2 ">
-        <div className="col-4 keret nagy kozep">{course.difficulty}</div>
-        <div className="col-4 keret nagy kozep">
+      <div className="course-details  ">
+        <div className=" keret nagy kozep">{course.difficulty}</div>
+        <div className="keret nagy kozep">
           chapter <br />
           {course.totalChapters}
         </div>
-        <div className="col-4 keret nagy kozep">
+        <div className="keret nagy kozep">
           total credit <br />
           {course.totalCredits}
         </div>

@@ -56,7 +56,7 @@ export default function CourseDetailsPage() {
             <div className="keret nagy szelesseg padding">
               {ch.credits} credits
             </div>
-            <button className="keret" style={{ background: "ligthGray" }}>
+            <button className="inactive" style={{ background: "ligthGray" }}>
               {" "}
               View chapter
             </button>

@@ -1,31 +1,19 @@
-import React, { useContext } from "react";
+
 import "./css/mentor.css";
-import { MentorContext } from "../contexts/MentorContext";
-import { useNavigate } from "react-router";
 
 
-export default function Mentor({ mentor }) {
-  const navigate = useNavigate();
 
-  const { bookedSession } = useContext(MentorContext);
-  function sessionBooked() {
-   bookedSession(mentor.id)
-    navigate(`/bookedsession`);
-  }
 
-  if (!mentor) {
-    return <div>Az adatok betöltés alatt</div>;
-  }
+export default function BookedSession({ session, mentor }) {
+
   return (
     <div className="sessions keret padding">
       <h3>{mentor.mentorName}</h3>
-      <p>
-        <strong>Expertise:</strong>
-        {mentor.expertise}
-      </p>
-      <p>
-        {mentor.experienceLevel} Developer with {} years experience
-      </p>
+        <div className="button">
+        <button className={session==="rejected"?"rejected-button":session==="pending"?"pending-button":"confirmed-button"} >
+        {session==="rejected"?"rejected":session==="pending"?"pending confirmation":"confirmed"}
+        </button>
+      </div>
       <div className="mentor-container">
         <div className="keret">
           <p>date</p>
@@ -57,15 +45,9 @@ export default function Mentor({ mentor }) {
           <p>{mentor.creditCost} credists</p>
         </div>
       </div>
-      <div className="button">
-        <button className="keret profile inactive">View profile</button>
-      </div>
+     
 
-      <div className="button">
-        <button className={`keret session ${mentor.isAvailable?"available-button":"inactive"}  `} onClick={sessionBooked} disabled={!mentor.isAvailable} >
-         {mentor.isAvailable?"Available":"Not available"} 
-        </button>
-      </div>
+    
     </div>
   );
 }

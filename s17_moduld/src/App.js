@@ -12,6 +12,8 @@ import CourseDetailsPage from "./pages/CourseDetailsPage";
 import authMiddleware from "./middleware/authMiddleware";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CoursesProvider } from "./contexts/CoursesContext";
+import { MentorProvider } from "./contexts/MentorContext";
+import BookedSessionPage from "./pages/BookedSessionPage";
 function App() {
   const router = createBrowserRouter([
     {
@@ -53,6 +55,10 @@ function App() {
           path: "/mentors",
           element: <MentorsPage />,
         },
+         {
+          path: "/bookedsession",
+          element: <BookedSessionPage />,
+        },
       ],
     },
     {
@@ -63,7 +69,9 @@ function App() {
   return (
     <AuthProvider>
       <CoursesProvider>
-        <RouterProvider router={router} />;
+        <MentorProvider>
+          <RouterProvider router={router} />;
+        </MentorProvider>
       </CoursesProvider>
     </AuthProvider>
   );
