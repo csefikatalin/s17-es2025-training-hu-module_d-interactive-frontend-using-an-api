@@ -1,12 +1,18 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CoursesContext } from "../contexts/CoursesContext";
 import { useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";
+import "./css/coursesPage.css";
 
 export default function CourseDetailsPage() {
   const { selectedCourse, getCourseById, loading, completeChapter } =
     useContext(CoursesContext);
   const { loadUser } = useContext(AuthContext);
+  const [sumOfCompletedCredits, setSumOfCompletedCredits] = useState(0);
+  const [countOfCompletedChapters, setCountOfCompletedChapters] = useState(0);
+  const [countOfChapters, setCountOfChapters] = useState(0);
+  const [sumOfCredits, setSumOfCredits] = useState(0);
+
   const { state } = useLocation();
   const navigate = useNavigate();
   const course = state?.course;
@@ -24,24 +30,14 @@ export default function CourseDetailsPage() {
       });
     }
   }, []);
-
-  if (loading || selectedCourse.length == 0) {
+  useEffect(() => {
+    if (selectedCourse?.course) {
+      calculatingProgress();
+    }
+  }, [selectedCourse]);
+  if (loading || !selectedCourse || selectedCourse.length == 0) {
     return <div>Az oldal betöltés alatt</div>;
   }
-
-  function markAsComleted(chapterId) {
-    console.log("mark", chapterId);
-    completeChapter(selectedCourse.course.id, chapterId)
-      .then(() => {
-        /* frissíteni kell a usert! */
-        loadUser();
-        getCourseById(selectedCourse.course.id);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
   function share(chapter) {
     if (
       window.LinkedInShare &&
@@ -57,16 +53,40 @@ export default function CourseDetailsPage() {
     } else {
       console.warn("LinkedInShare widget még nem elérhető");
     }
-    /*     const text = encodeURIComponent(
-      `I just completed "${chapter.title}" in the course "${course.title}"! 🎉`
-    );
-    const url = encodeURIComponent(
-      `http://localhost:3000/courses/${course.id}`
-    );
-    window.open(
-      `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
-      "_blank"
-    ); */
+  }
+  function markAsComleted(chapterId) {
+    console.log("mark", chapterId);
+    completeChapter(selectedCourse.course.id, chapterId)
+      .then(() => {
+        /* frissíteni kell a usert! */
+        loadUser();
+        getCourseById(selectedCourse.course.id);
+        calculatingProgress();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  /* progress bar */
+  function calculatingProgress() {
+    const totalChapters = selectedCourse.course.chapters.length;
+    let completedChapters = 0;
+    let totalCredits = 0;
+    let completedCredits = 0;
+
+    selectedCourse.course.chapters.forEach((ch) => {
+      totalCredits += ch.credits;
+      if (ch.isCompleted) {
+        completedChapters += 1;
+        completedCredits += ch.credits;
+      }
+    });
+
+    setCountOfChapters(totalChapters);
+    setCountOfCompletedChapters(completedChapters);
+    setSumOfCredits(totalCredits);
+    setSumOfCompletedCredits(completedCredits);
   }
 
   return (
@@ -79,6 +99,30 @@ export default function CourseDetailsPage() {
         <p>{selectedCourse.course.description}</p>
         <p>{selectedCourse.course.difficulty}</p>
         {selectedCourse.course.id}
+        <div className="progress">
+          <div className="chapter-progress keret">
+            <h3>Chapter progress</h3>
+             <div className="progress-container">
+               <div className="progressbar" style={{background:"grey", width: `${(countOfCompletedChapters / countOfChapters) * 100}%`}}></div>
+         </div>
+            <p>
+              {countOfCompletedChapters} of {countOfChapters} chapters completed
+              ({((countOfCompletedChapters / countOfChapters) * 100).toFixed(2)}{" "}
+              %)
+            </p>
+          </div>
+          <div className="credit-progress keret">
+            {" "}
+            <h3>Credit progress</h3>
+            <div className="progress-container">
+              <div className="progressbar" style={{background:"grey", width: `${(sumOfCompletedCredits / sumOfCredits) * 100}%`}}></div>
+            </div>
+            <p>
+              {sumOfCompletedCredits} of {sumOfCredits} credits earned (
+              {((sumOfCompletedCredits / sumOfCredits) * 100).toFixed(2)} %)
+            </p>
+          </div>
+        </div>
       </div>
       {selectedCourse.course.chapters.map((ch, i) => {
         return (
