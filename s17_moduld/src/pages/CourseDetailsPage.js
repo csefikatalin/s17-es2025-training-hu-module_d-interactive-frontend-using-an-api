@@ -16,12 +16,15 @@ export default function CourseDetailsPage() {
     getCourseById(course.id);
   }, [course]);
   useEffect(() => {
-    window.LinkedInShare.init({
-      container: "#linkedin-share-root",
-      theme: "light",
-      locale: "en-US",
-    });
+    if (window.LinkedInShare) {
+      window.LinkedInShare.init({
+        container: "#linkedin-share-root",
+        theme: "light",
+        locale: "en-US",
+      });
+    }
   }, []);
+
   if (loading || selectedCourse.length == 0) {
     return <div>Az oldal betöltés alatt</div>;
   }
@@ -40,7 +43,10 @@ export default function CourseDetailsPage() {
   }
 
   function share(chapter) {
-    if (window.LinkedInShare) {
+    if (
+      window.LinkedInShare &&
+      typeof window.LinkedInShare.open === "function"
+    ) {
       window.LinkedInShare.open({
         url: window.location.href,
         title: `Course: ${chapter.courseTitle}`,
@@ -48,6 +54,8 @@ export default function CourseDetailsPage() {
         source: "SkillShare Academy",
         tags: ["learning", "skills"],
       });
+    } else {
+      console.warn("LinkedInShare widget még nem elérhető");
     }
     /*     const text = encodeURIComponent(
       `I just completed "${chapter.title}" in the course "${course.title}"! 🎉`
@@ -98,13 +106,12 @@ export default function CourseDetailsPage() {
             <div>
               {ch.isCompleted ? (
                 <button
-                  className="keret linkedin {
-"
+                  className="keret linkedin"
                   onClick={() => {
                     share(ch);
                   }}
                 >
-                  Share achievement in LinkedIn 
+                  Share achievement in LinkedIn
                 </button>
               ) : (
                 ""
