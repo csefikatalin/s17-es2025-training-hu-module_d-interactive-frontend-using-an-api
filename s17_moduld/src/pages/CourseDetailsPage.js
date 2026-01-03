@@ -54,18 +54,20 @@ export default function CourseDetailsPage() {
       console.warn("LinkedInShare widget még nem elérhető");
     }
   }
-  function markAsComleted(chapterId) {
+  function markAsComleted(chapterId, isCompleted) {
     console.log("mark", chapterId);
-    completeChapter(selectedCourse.course.id, chapterId)
-      .then(() => {
-        /* frissíteni kell a usert! */
-        loadUser();
-        getCourseById(selectedCourse.course.id);
-        calculatingProgress();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (!isCompleted) {
+      completeChapter(selectedCourse.course.id, chapterId)
+        .then(() => {
+          /* frissíteni kell a usert! */
+          loadUser();
+          getCourseById(selectedCourse.course.id);
+          calculatingProgress();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }
 
   /* progress bar */
@@ -102,9 +104,17 @@ export default function CourseDetailsPage() {
         <div className="progress">
           <div className="chapter-progress keret">
             <h3>Chapter progress</h3>
-             <div className="progress-container">
-               <div className="progressbar" style={{background:"grey", width: `${(countOfCompletedChapters / countOfChapters) * 100}%`}}></div>
-         </div>
+            <div className="progress-container">
+              <div
+                className="progressbar"
+                style={{
+                  background: "grey",
+                  width: `${
+                    (countOfCompletedChapters / countOfChapters) * 100
+                  }%`,
+                }}
+              ></div>
+            </div>
             <p>
               {countOfCompletedChapters} of {countOfChapters} chapters completed
               ({((countOfCompletedChapters / countOfChapters) * 100).toFixed(2)}{" "}
@@ -115,7 +125,13 @@ export default function CourseDetailsPage() {
             {" "}
             <h3>Credit progress</h3>
             <div className="progress-container">
-              <div className="progressbar" style={{background:"grey", width: `${(sumOfCompletedCredits / sumOfCredits) * 100}%`}}></div>
+              <div
+                className="progressbar"
+                style={{
+                  background: "grey",
+                  width: `${(sumOfCompletedCredits / sumOfCredits) * 100}%`,
+                }}
+              ></div>
             </div>
             <p>
               {sumOfCompletedCredits} of {sumOfCredits} credits earned (
@@ -140,9 +156,9 @@ export default function CourseDetailsPage() {
             </button>
             <button
               className="keret"
-              style={{ background: ch.isCompleted ? "lightGreen" : "beige" }}
+              style={{ background: ch.isCompleted ? "lightGreen" : "beige", cursor: ch.isCompleted ? "not-allowed" : "pointer"}}
               onClick={() => {
-                markAsComleted(ch.id);
+                markAsComleted(ch.id, ch.isCompleted);
               }}
             >
               {ch.isCompleted ? "Chapter completed" : "Mark as Completed"}
