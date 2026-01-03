@@ -3,6 +3,7 @@ import Mentor from "../components/Mentor";
 import { MentorContext } from "../contexts/MentorContext";
 import { AuthContext } from "../contexts/AuthContext";
 
+
 export default function MentorsPage() {
   const { mentorList, getMentor } = useContext(MentorContext);
   const { user, loadUser, loading } = useContext(AuthContext);
@@ -10,7 +11,8 @@ export default function MentorsPage() {
   useEffect(() => {
     getMentor();
     loadUser();
-  }, []);
+  }, []); 
+
   if (loading) {
     // Betöltés alatt ezt jeleníti meg
     return (
@@ -19,6 +21,8 @@ export default function MentorsPage() {
       </>
     );
   }
+
+
   return (
     <>
       <div className="keret padding">

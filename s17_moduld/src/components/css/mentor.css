@@ -42,3 +42,7 @@ button {
     background-color: rgb(190, 221, 192);
     border:1px solid rgb(21, 75, 30)
 }
+.canceled-button {
+    background-color: rgb(233, 165, 76);
+    border:1px solid rgb(99, 61, 18)
+}

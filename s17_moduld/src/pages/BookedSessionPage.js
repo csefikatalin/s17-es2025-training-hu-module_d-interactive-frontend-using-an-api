@@ -3,6 +3,7 @@ import React, { useContext, useEffect } from "react";
 
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
+import { usePolling } from "../hooks/usePolling";
 
 export default function BookedSessionPage() {
   const navigate = useNavigate();
@@ -14,6 +15,12 @@ export default function BookedSessionPage() {
     loadUser();
     console.log(user.sessions);
   }, []);
+
+  // Polling - frissítés 30 másodpercenként (elérhető és foglalt időpontok)
+   usePolling(() => {
+  
+    loadUser();
+  }, 30000); 
   if (loading || user.sessions.length == 0) {
     // Betöltés alatt ezt jeleníti meg
     return (
@@ -30,7 +37,6 @@ export default function BookedSessionPage() {
       {user.sessions.map((s, i) => {
         return <BookedSession session={s} key={i} mentor={{}} />;
       })}
-  
     </div>
   );
 }
