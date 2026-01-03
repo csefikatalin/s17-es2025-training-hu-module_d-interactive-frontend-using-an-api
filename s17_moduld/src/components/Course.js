@@ -13,7 +13,11 @@ export default function Course({
   }
   return (
     <div className="course keret ">
-      <h2 className="nagy">{course.title}</h2>
+      <div className="header">
+        <h2 className="nagy"> {course.title}</h2>{" "}
+        <p className="beiratkozva"> {course.isEnrolled ? "✔" : "📝"}</p>
+      </div>
+
       <p>{course.description}</p>
       <div className="course-details  ">
         <div className=" keret nagy kozep">{course.difficulty}</div>
@@ -27,6 +31,7 @@ export default function Course({
         </div>
       </div>
       <button
+        style={{ background: course.isEnrolled ? "lightGreen" : "beige" }}
         className="nagy"
         onClick={() => {
           enroll();

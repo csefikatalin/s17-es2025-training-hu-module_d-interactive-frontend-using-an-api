@@ -10,13 +10,19 @@ export default function CourseDetailsPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const course = state?.course;
-  /*   console.log(course);
-  console.log(selectedCourse); */
+  console.log(course);
+  console.log(selectedCourse);
   useEffect(() => {
     getCourseById(course.id);
   }, [course]);
-
-  if (loading) {
+  useEffect(() => {
+    window.LinkedInShare.init({
+      container: "#linkedin-share-root",
+      theme: "light",
+      locale: "en-US",
+    });
+  }, []);
+  if (loading || selectedCourse.length == 0) {
     return <div>Az oldal betöltés alatt</div>;
   }
 
@@ -25,14 +31,34 @@ export default function CourseDetailsPage() {
     completeChapter(selectedCourse.course.id, chapterId)
       .then(() => {
         /* frissíteni kell a usert! */
-        loadUser(); 
+        loadUser();
         getCourseById(selectedCourse.course.id);
       })
       .catch((error) => {
         console.log(error);
       });
-    
+  }
 
+  function share(chapter) {
+    if (window.LinkedInShare) {
+      window.LinkedInShare.open({
+        url: window.location.href,
+        title: `Course: ${chapter.courseTitle}`,
+        summary: `I just completed "${chapter.title}"!`,
+        source: "SkillShare Academy",
+        tags: ["learning", "skills"],
+      });
+    }
+    /*     const text = encodeURIComponent(
+      `I just completed "${chapter.title}" in the course "${course.title}"! 🎉`
+    );
+    const url = encodeURIComponent(
+      `http://localhost:3000/courses/${course.id}`
+    );
+    window.open(
+      `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+      "_blank"
+    ); */
   }
 
   return (
@@ -62,16 +88,36 @@ export default function CourseDetailsPage() {
             </button>
             <button
               className="keret"
-              style={{ background: "lightGreen" }}
+              style={{ background: ch.isCompleted ? "lightGreen" : "beige" }}
               onClick={() => {
                 markAsComleted(ch.id);
               }}
             >
               {ch.isCompleted ? "Chapter completed" : "Mark as Completed"}
             </button>
+            <div>
+              {ch.isCompleted ? (
+                <button
+                  className="keret linkedin {
+"
+                  onClick={() => {
+                    share(ch);
+                  }}
+                >
+                  Share achievement in LinkedIn 
+                </button>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
         );
       })}
+
+      {/* linkedin widget
+      
+      */}
+      <div id="linkedin-share-root"> LinkedIn widget</div>
     </div>
   );
 }

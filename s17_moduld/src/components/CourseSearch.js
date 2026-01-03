@@ -15,9 +15,9 @@ export default function CourseSearch() {
     <div className="p-3 keret">
       <h1 className="nagy">Course Catalog</h1>
       <p>Discover and enroll in courses to advance your skills</p>
-      <div className="row p-2 ">
+      <div className="szuro">
         <input
-          className="col-8"
+          className=""
           type="text"
           value={search}
           onChange={(e) => {
@@ -26,7 +26,7 @@ export default function CourseSearch() {
           placeholder="Search courses by title or description ..."
         />
         <select
-          className="col-4 nagy"
+          className="nagy"
           value={difficulties}
           onChange={(e) => {
             setDifficulties(e.target.value);

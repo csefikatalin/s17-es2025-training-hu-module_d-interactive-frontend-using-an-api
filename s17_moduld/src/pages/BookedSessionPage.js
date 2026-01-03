@@ -30,8 +30,7 @@ export default function BookedSessionPage() {
       {user.sessions.map((s, i) => {
         return <BookedSession session={s} key={i} mentor={{}} />;
       })}
-      {/*  <BookedSession session="pending" mentor={{}} />
-      <BookedSession session="confirmed" mentor={{}} /> */}
+  
     </div>
   );
 }
